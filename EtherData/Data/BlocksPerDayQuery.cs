@@ -2,6 +2,7 @@
 using Google.Cloud.BigQuery.V2;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace EtherData.Data
