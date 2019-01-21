@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace EtherData.Functions.BlocksPerDay
 {
-    public static class Get
+    public static class BlocksPerDay
     {
         [FunctionName("BlocksPerDayGet")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocksPerDay")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocks/perDay")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
@@ -22,8 +22,6 @@ namespace EtherData.Functions.BlocksPerDay
                 .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
-
-            log.LogInformation("C# HTTP trigger function processed a request.");
 
             var query = new BlocksPerDayQuery(config);
             var cache = new RedisCacheManager(config);
