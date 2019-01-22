@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace EtherData.Functions.BlocksPerDay
 {
-    public static class BlocksPerDay
+    public static class GetStat
     {
-        [FunctionName("BlocksPerDayGet")]
+        [FunctionName("GetBlockStat")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocks/perDay")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocks/stat")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
@@ -23,10 +23,10 @@ namespace EtherData.Functions.BlocksPerDay
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new BlocksPerDayQuery(config);
+            var query = new BlockStatQuery(config);
             var cache = new RedisCacheManager(config);
 
-            var result = cache.Get(CacheKey.BLOCKS_PER_DAY, query.Get);
+            var result = cache.Get(CacheKey.BLOCK_STAT, query.Get);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }

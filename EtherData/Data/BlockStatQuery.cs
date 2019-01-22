@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace EtherData.Data
 {
-    public class BlockStatPerDayQuery
+    public class BlockStatQuery
     {
         private readonly BigQueryClient _client;
 
-        public BlockStatPerDayQuery(IConfigurationRoot config)
+        public BlockStatQuery(IConfigurationRoot config)
         {
             _client = BigQueryClient.Create(
                 config["GOOGLE_APPLICATION:PROJECT_ID"],
@@ -21,20 +21,16 @@ namespace EtherData.Data
         public IEnumerable<BlockStatPerDay> Get()
         {
             string query = @"SELECT
-                EXTRACT(DATE FROM timestamp) as date,
-                COUNT(*) as count,
-                CAST(AVG(difficulty) / 1000000000000 AS FLOAT64) as avg_difficulty,
-                CAST(AVG(total_difficulty) / 1000000000000 AS FLOAT64) as avg_total_difficulty,
-                SUM(size) as size,
-                AVG(size) as avg_size,
-                AVG(gas_limit) as avg_gas_limit,
-                SUM(gas_used) as gas_used,
-                AVG(gas_used) as avg_gas_used,
-                SUM(transaction_count) as tx_count,
-                AVG(transaction_count) as avg_tx_count
-            FROM `bigquery-public-data.ethereum_blockchain.blocks`
-            GROUP BY date
-            ORDER BY date";
+                    EXTRACT(DATE FROM timestamp) as date,
+                    COUNT(*) as count,
+                    CAST(AVG(difficulty) / 1000000000000 AS FLOAT64) as avg_difficulty,
+                    SUM(size) as size,
+                    AVG(gas_limit) as avg_gas_limit,
+                    SUM(gas_used) as gas_used,
+                    SUM(transaction_count) as tx_count
+                FROM `bigquery-public-data.ethereum_blockchain.blocks`
+                GROUP BY date
+                ORDER BY date";
             var result = _client.ExecuteQuery(query, parameters: null);
 
             var list = new List<BlockStatPerDay>();
@@ -45,14 +41,10 @@ namespace EtherData.Data
                     Date = (DateTime)row["date"],
                     Count = (long)row["count"],
                     AvgDifficulty = (double)row["avg_difficulty"],
-                    AvgTotalDifficulty = (double)row["avg_total_difficulty"],
                     Size = (long)row["size"],
-                    AvgSize = (double)row["avg_size"],
                     AvgGasLimit = (double)row["avg_gas_limit"],
                     GasUsed = (long)row["gas_used"],
-                    AvgGasUsed = (double)row["avg_gas_used"],
                     TxCount = (long)row["tx_count"],
-                    AvgTxCount = (double)row["avg_tx_count"],
                 });
             }
             return list;
@@ -70,14 +62,8 @@ namespace EtherData.Data
         [JsonProperty("avg_difficulty")]
         public double AvgDifficulty { get; set; }
 
-        [JsonProperty("avg_total_difficulty")]
-        public double AvgTotalDifficulty { get; set; }
-
         [JsonProperty("size")]
         public long Size { get; set; }
-
-        [JsonProperty("avg_size")]
-        public double AvgSize { get; set; }
 
         [JsonProperty("avg_gas_limit")]
         public double AvgGasLimit { get; set; }
@@ -85,13 +71,7 @@ namespace EtherData.Data
         [JsonProperty("gas_used")]
         public long GasUsed { get; set; }
 
-        [JsonProperty("avg_gas_used")]
-        public double AvgGasUsed { get; set; }
-
         [JsonProperty("tx_count")]
         public long TxCount { get; set; }
-
-        [JsonProperty("avg_tx_count")]
-        public double AvgTxCount { get; set; }
     }
 }
