@@ -7,13 +7,13 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace EtherData.Functions.Blocks
+namespace EtherData.Functions.Tokens
 {
-    public static class GetStat
+    public static class GetStat365
     {
-        [FunctionName("GetBlockStat")]
+        [FunctionName("GetTokenStat365")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocks/stat")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tokens/stat365")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
@@ -23,10 +23,10 @@ namespace EtherData.Functions.Blocks
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new BlockStatQuery(config);
+            var query = new TokenStatQuery(config);
             var cache = new RedisCacheManager(config);
 
-            var result = cache.Get(CacheKey.BLOCK_STAT, query.Get);
+            var result = cache.Get(CacheKey.TOKEN_STAT_365, query.Get365);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }
