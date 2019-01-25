@@ -23,7 +23,7 @@ namespace EtherData.Functions.Blocks
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new BlockStatQuery(config);
+            var query = new BlockStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
             var result = cache.Get(CacheKey.BLOCK_STAT, query.Get);

@@ -23,7 +23,7 @@ namespace EtherData.Functions.Tokens
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new TokenStatQuery(config);
+            var query = new TokenStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
             var result = cache.Get(CacheKey.TOKEN_STAT_30, query.Get30);

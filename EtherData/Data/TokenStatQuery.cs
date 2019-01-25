@@ -1,6 +1,4 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Cloud.BigQuery.V2;
-using Microsoft.Extensions.Configuration;
+﻿using Google.Cloud.BigQuery.V2;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -10,11 +8,9 @@ namespace EtherData.Data
     {
         private readonly BigQueryClient _client;
 
-        public TokenStatQuery(IConfigurationRoot config)
+        public TokenStatQuery(BigQueryClient client)
         {
-            _client = BigQueryClient.Create(
-                config["GOOGLE_APPLICATION:PROJECT_ID"],
-                GoogleCredential.FromFile(config["GOOGLE_APPLICATION:CREDENTIALS"]));
+            _client = client;
         }
 
         public IEnumerable<TokenStat> Get30()

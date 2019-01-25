@@ -1,6 +1,4 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Cloud.BigQuery.V2;
-using Microsoft.Extensions.Configuration;
+﻿using Google.Cloud.BigQuery.V2;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,11 +9,9 @@ namespace EtherData.Data
     {
         private readonly BigQueryClient _client;
 
-        public BlockStatQuery(IConfigurationRoot config)
+        public BlockStatQuery(BigQueryClient client)
         {
-            _client = BigQueryClient.Create(
-                config["GOOGLE_APPLICATION:PROJECT_ID"],
-                GoogleCredential.FromFile(config["GOOGLE_APPLICATION:CREDENTIALS"]));
+            _client = client;
         }
 
         public IEnumerable<BlockStatPerDay> Get()
@@ -53,25 +49,25 @@ namespace EtherData.Data
 
     public class BlockStatPerDay
     {
-        [JsonProperty("date")]
+        [JsonProperty("d")]
         public DateTime Date { get; set; }
 
-        [JsonProperty("count")]
+        [JsonProperty("c")]
         public long Count { get; set; }
 
-        [JsonProperty("avg_difficulty")]
+        [JsonProperty("a_d")]
         public double AvgDifficulty { get; set; }
 
-        [JsonProperty("size")]
+        [JsonProperty("s")]
         public long Size { get; set; }
 
-        [JsonProperty("avg_gas_limit")]
+        [JsonProperty("a_g_l")]
         public double AvgGasLimit { get; set; }
 
-        [JsonProperty("gas_used")]
+        [JsonProperty("g_u")]
         public long GasUsed { get; set; }
 
-        [JsonProperty("tx_count")]
+        [JsonProperty("tx_c")]
         public long TxCount { get; set; }
     }
 }
