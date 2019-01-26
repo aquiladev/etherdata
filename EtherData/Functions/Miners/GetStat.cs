@@ -7,13 +7,13 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace EtherData.Functions.Blocks
+namespace EtherData.Functions.Tokens
 {
-    public static class GetStatOld
+    public static class GetStat
     {
-        [FunctionName("GetBlockStatOld")]
+        [FunctionName("GetMinerStat")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocks/stat")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/miners/stat")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
@@ -23,10 +23,10 @@ namespace EtherData.Functions.Blocks
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new BlockStatQuery(BigQueryFactory.Create(config));
+            var query = new MinerStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
-            var result = cache.Get(CacheKey.BLOCK_STAT, query.Get);
+            var result = cache.Get(CacheKey.MINER_STAT, query.GetAll);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }

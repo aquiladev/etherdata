@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace EtherData.Functions.Tokens
 {
-    public static class GetStat
+    public static class GetStat30
     {
-        [FunctionName("GetTokenStat")]
+        [FunctionName("GetMinerStat30")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tokens/stat")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/miners/stat30")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
@@ -23,10 +23,10 @@ namespace EtherData.Functions.Tokens
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new TokenUsageQuery(BigQueryFactory.Create(config));
+            var query = new MinerStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
-            var result = cache.Get(CacheKey.TOKEN_STAT, query.GetAll);
+            var result = cache.Get(CacheKey.MINER_STAT_30, query.Get30);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }
