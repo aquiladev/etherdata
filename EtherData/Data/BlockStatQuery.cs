@@ -14,10 +14,10 @@ namespace EtherData.Data
             _client = client;
         }
 
-        public IEnumerable<BlockStatPerDay> Get()
+        public IEnumerable<BlockStat> Get()
         {
             string query = @"SELECT
-                    EXTRACT(DATE FROM timestamp) as date,
+                    TIMESTAMP_TRUNC(timestamp, DAY) as date,
                     COUNT(*) as count,
                     CAST(AVG(difficulty) / 1000000000000 AS FLOAT64) as avg_difficulty,
                     SUM(size) as size,
@@ -27,12 +27,36 @@ namespace EtherData.Data
                 FROM `bigquery-public-data.ethereum_blockchain.blocks`
                 GROUP BY date
                 ORDER BY date";
-            var result = _client.ExecuteQuery(query, parameters: null);
 
-            var list = new List<BlockStatPerDay>();
+            var result = _client.ExecuteQuery(query, parameters: null);
+            return ToModel(result);
+        }
+
+        public IEnumerable<BlockStat> Get30()
+        {
+            string query = @"SELECT
+                    TIMESTAMP_TRUNC(timestamp, HOUR) as date,
+                    COUNT(*) as count,
+                    CAST(AVG(difficulty) / 1000000000000 AS FLOAT64) as avg_difficulty,
+                    SUM(size) as size,
+                    AVG(gas_limit) as avg_gas_limit,
+                    SUM(gas_used) as gas_used,
+                    SUM(transaction_count) as tx_count
+                FROM `bigquery-public-data.ethereum_blockchain.blocks`
+                WHERE DATE(timestamp) > DATE_ADD(current_date(), INTERVAL -30 DAY)
+                GROUP BY date
+                ORDER BY date";
+
+            var result = _client.ExecuteQuery(query, parameters: null);
+            return ToModel(result);
+        }
+
+        private IEnumerable<BlockStat> ToModel(BigQueryResults result)
+        {
+            var list = new List<BlockStat>();
             foreach (var row in result)
             {
-                list.Add(new BlockStatPerDay
+                list.Add(new BlockStat
                 {
                     Date = (DateTime)row["date"],
                     Count = (long)row["count"],
@@ -47,7 +71,7 @@ namespace EtherData.Data
         }
     }
 
-    public class BlockStatPerDay
+    public class BlockStat
     {
         [JsonProperty("d")]
         public DateTime Date { get; set; }

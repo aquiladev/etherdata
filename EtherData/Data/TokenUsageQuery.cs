@@ -4,31 +4,31 @@ using System.Collections.Generic;
 
 namespace EtherData.Data
 {
-    public class TokenStatQuery
+    public class TokenUsageQuery
     {
         private readonly BigQueryClient _client;
 
-        public TokenStatQuery(BigQueryClient client)
+        public TokenUsageQuery(BigQueryClient client)
         {
             _client = client;
         }
 
-        public IEnumerable<TokenStat> Get30()
+        public IEnumerable<TokenUsage> Get30()
         {
             return Get(30);
         }
 
-        public IEnumerable<TokenStat> Get365()
+        public IEnumerable<TokenUsage> Get365()
         {
             return Get(365);
         }
 
-        public IEnumerable<TokenStat> GetAll()
+        public IEnumerable<TokenUsage> GetAll()
         {
             return Get(0);
         }
 
-        public IEnumerable<TokenStat> Get(int period)
+        private IEnumerable<TokenUsage> Get(int period)
         {
             string query = @"SELECT tt.token_address, t.name, COUNT(*) as transfer_count
                 FROM `bigquery-public-data.ethereum_blockchain.token_transfers` as tt
@@ -45,11 +45,15 @@ namespace EtherData.Data
             query = string.Format(query, where);
 
             var result = _client.ExecuteQuery(query, parameters: null);
+            return ToModel(result);
+        }
 
-            var list = new List<TokenStat>();
+        private IEnumerable<TokenUsage> ToModel(BigQueryResults result)
+        {
+            var list = new List<TokenUsage>();
             foreach (var row in result)
             {
-                list.Add(new TokenStat
+                list.Add(new TokenUsage
                 {
                     Address = (string)row["token_address"],
                     Name = (string)row["name"],
@@ -60,7 +64,7 @@ namespace EtherData.Data
         }
     }
 
-    public class TokenStat
+    public class TokenUsage
     {
         [JsonProperty("a")]
         public string Address { get; set; }

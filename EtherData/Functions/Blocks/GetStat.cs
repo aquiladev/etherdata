@@ -13,7 +13,7 @@ namespace EtherData.Functions.Blocks
     {
         [FunctionName("GetBlockStat")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "blocks/stat")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/blocks/stat")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
