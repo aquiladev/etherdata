@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EtherData.Data
 {
@@ -53,21 +54,16 @@ namespace EtherData.Data
 
         private IEnumerable<BlockStat> ToModel(BigQueryResults result)
         {
-            var list = new List<BlockStat>();
-            foreach (var row in result)
+            return result.Select(x => new BlockStat
             {
-                list.Add(new BlockStat
-                {
-                    Date = (DateTime)row["date"],
-                    Count = (long)row["count"],
-                    AvgDifficulty = (double)row["avg_difficulty"],
-                    Size = (long)row["size"],
-                    AvgGasLimit = (double)row["avg_gas_limit"],
-                    GasUsed = (long)row["gas_used"],
-                    TxCount = (long)row["tx_count"],
-                });
-            }
-            return list;
+                Date = (DateTime)x["date"],
+                Count = (long)x["count"],
+                AvgDifficulty = (double)x["avg_difficulty"],
+                Size = (long)x["size"],
+                AvgGasLimit = (double)x["avg_gas_limit"],
+                GasUsed = (long)x["gas_used"],
+                TxCount = (long)x["tx_count"],
+            });
         }
     }
 
