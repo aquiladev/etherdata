@@ -7,13 +7,13 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace EtherData.Functions.Miners
+namespace EtherData.Functions.Nonce
 {
-    public static class GetStat30
+    public static class GetStat
     {
-        [FunctionName("GetMinerStat30")]
+        [FunctionName("GetBlockNonceStat")]
         public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/miners/stat30")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/nonces/stat")]HttpRequestMessage req,
             ILogger log,
             ExecutionContext context)
         {
@@ -23,10 +23,11 @@ namespace EtherData.Functions.Miners
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new MinerStatQuery(BigQueryFactory.Create(config));
+            var query = new BlockNonceStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
-            var result = cache.Get(CacheKey.MINER_STAT_30, query.Get30);
+            //var result = cache.Get(CacheKey.BLOCK_NONCE_STAT, query.Get);
+            var result = query.Get();
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }

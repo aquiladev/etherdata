@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace EtherData.Functions.Tokens
+namespace EtherData.Functions.Miners
 {
     public static class GetStat365
     {

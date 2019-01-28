@@ -6,6 +6,7 @@ namespace EtherData.Cache
     {
         public const string BLOCK_STAT = "BLOCK_STAT";
         public const string BLOCK_STAT_30 = "BLOCK_STAT_30";
+        public const string BLOCK_NONCE_STAT = "BLOCK_NONCE_STAT";
         public const string TOKEN_USAGE = "TOKEN_USAGE";
         public const string TOKEN_USAGE_30 = "TOKEN_USAGE_30";
         public const string TOKEN_USAGE_365 = "TOKEN_USAGE_365";
@@ -19,6 +20,7 @@ namespace EtherData.Cache
             {
                 BLOCK_STAT,
                 BLOCK_STAT_30,
+                BLOCK_NONCE_STAT,
                 TOKEN_USAGE,
                 TOKEN_USAGE_30,
                 TOKEN_USAGE_365,
