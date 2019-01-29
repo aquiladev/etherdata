@@ -26,8 +26,7 @@ namespace EtherData.Functions.Nonce
             var query = new BlockNonceStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
-            //var result = cache.Get(CacheKey.BLOCK_NONCE_STAT, query.Get);
-            var result = query.Get();
+            var result = cache.Get(CacheKey.BLOCK_NONCE_STAT, query.Get);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }

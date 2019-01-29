@@ -24,7 +24,7 @@ namespace EtherData.Data
 
             var result = _client.ExecuteQuery(query, parameters: null).ToList();
             return Enumerable.Range(0, (int)(long)result[0][0])
-                .Select(x => result.Count(y => (long)y[0] > x));
+                .Select(x => result.Count(y => (long)y[0] >= x));
         }
     }
 }
