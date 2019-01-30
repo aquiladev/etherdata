@@ -31,20 +31,6 @@ namespace EtherData.Data
                 });
             return result;
         }
-
-        private IEnumerable<BlockNonceStat> ToModel(BigQueryResults result)
-        {
-            var list = new List<BlockNonceStat>((int)result.TotalRows);
-            foreach (var row in result)
-            {
-                list.Add(new BlockNonceStat
-                {
-                    Date = (DateTime)row["date"],
-                    Nonces = (string)row["nonces"]
-                });
-            }
-            return list;
-        }
     }
 
     public class BlockNonceStat

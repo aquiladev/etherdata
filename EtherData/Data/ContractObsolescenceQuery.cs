@@ -15,16 +15,25 @@ namespace EtherData.Data
 
         public IEnumerable<int> Get()
         {
-            string query = @"SELECT DIV(TIMESTAMP_DIFF(MAX(t.block_timestamp), c.block_timestamp, HOUR), 168) AS d
-                FROM `bigquery-public-data.ethereum_blockchain.contracts` AS c
-                LEFT JOIN `bigquery-public-data.ethereum_blockchain.transactions` AS t ON c.address = t.to_address
-                WHERE c.block_timestamp < t.block_timestamp
-                GROUP BY c.address, c.block_timestamp
-                ORDER BY 1 DESC";
+            string query = @"WITH ContractWeeks AS ( 
+                  SELECT Week, COUNT(*) as _contractsSum
+                  FROM (
+                    SELECT DIV(TIMESTAMP_DIFF(MAX(t.block_timestamp), c.block_timestamp, HOUR), 168) as Week
+                    FROM `bigquery-public-data.ethereum_blockchain.contracts` AS c
+                    LEFT JOIN `bigquery-public-data.ethereum_blockchain.transactions` AS t ON c.address = t.to_address
+                    WHERE c.block_timestamp < t.block_timestamp
+                    GROUP BY c.address, c.block_timestamp) z 
+                  GROUP BY week
+                ) 
 
-            var result = _client.ExecuteQuery(query, parameters: null).ToList();
-            return Enumerable.Range(0, (int)(long)result[0][0])
-                .Select(x => result.Count(y => (long)y[0] >= x));
+                SELECT SUM(_contractsSum)
+                FROM UNNEST(GENERATE_ARRAY(0, (SELECT MAX(Week) From ContractWeeks) )) AS Week
+                CROSS JOIN ContractWeeks c
+                WHERE Week <= c.Week
+                GROUP BY Week
+                ORDER BY Week";
+
+            return _client.ExecuteQuery(query, parameters: null).Select(x => (int)(long)x[0]);
         }
     }
 }
