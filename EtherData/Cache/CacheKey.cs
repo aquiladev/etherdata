@@ -14,6 +14,7 @@ namespace EtherData.Cache
         public const string MINER_STAT_30 = "MINER_STAT_30";
         public const string MINER_STAT_365 = "MINER_STAT_365";
         public const string CONTRACT_OBSOLESCENCE = "CONTRACT_OBSOLESCENCE";
+        public const string CONTRACT_DEPLOYMENT_STAT = "CONTRACT_DEPLOYMENT_STAT";
 
         public static IEnumerable<string> GetAll()
         {
@@ -28,7 +29,8 @@ namespace EtherData.Cache
                 MINER_STAT,
                 MINER_STAT_30,
                 MINER_STAT_365,
-                CONTRACT_OBSOLESCENCE
+                CONTRACT_OBSOLESCENCE,
+                CONTRACT_DEPLOYMENT_STAT
             };
         }
     }
