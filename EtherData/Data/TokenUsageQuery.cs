@@ -1,6 +1,8 @@
-﻿using Google.Cloud.BigQuery.V2;
+﻿using EtherData.Models;
+using Google.Cloud.BigQuery.V2;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EtherData.Data
 {
@@ -13,22 +15,7 @@ namespace EtherData.Data
             _client = client;
         }
 
-        public IEnumerable<TokenUsage> Get30()
-        {
-            return Get(30);
-        }
-
-        public IEnumerable<TokenUsage> Get365()
-        {
-            return Get(365);
-        }
-
-        public IEnumerable<TokenUsage> GetAll()
-        {
-            return Get(0);
-        }
-
-        private IEnumerable<TokenUsage> Get(int period)
+        public IEnumerable<TokenUsage> Get(TokenStatFilter filter)
         {
             string query = @"SELECT tt.token_address, t.name, COUNT(*) as transfer_count
                 FROM `bigquery-public-data.ethereum_blockchain.token_transfers` as tt
@@ -38,29 +25,19 @@ namespace EtherData.Data
                 ORDER BY 3 DESC
                 LIMIT 1000";
             string where = "";
-            if (period != 0)
+            if (filter != TokenStatFilter.Default)
             {
-                where = $"WHERE DATE(tt.block_timestamp) > DATE_ADD(current_date(), INTERVAL -{period} DAY)";
+                where = $"WHERE DATE(tt.block_timestamp) > DATE_ADD(current_date(), INTERVAL -{(int)filter} DAY)";
             }
             query = string.Format(query, where);
 
-            var result = _client.ExecuteQuery(query, parameters: null);
-            return ToModel(result);
-        }
-
-        private IEnumerable<TokenUsage> ToModel(BigQueryResults result)
-        {
-            var list = new List<TokenUsage>();
-            foreach (var row in result)
-            {
-                list.Add(new TokenUsage
+            return _client.ExecuteQuery(query, parameters: null)
+                .Select(x => new TokenUsage
                 {
-                    Address = (string)row["token_address"],
-                    Name = (string)row["name"],
-                    TransferCount = (long)row["transfer_count"],
+                    Address = (string)x["token_address"],
+                    Name = (string)x["name"],
+                    TransferCount = (long)x["transfer_count"],
                 });
-            }
-            return list;
         }
     }
 

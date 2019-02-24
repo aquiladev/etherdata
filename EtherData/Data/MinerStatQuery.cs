@@ -1,6 +1,8 @@
-﻿using Google.Cloud.BigQuery.V2;
+﻿using EtherData.Models;
+using Google.Cloud.BigQuery.V2;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EtherData.Data
 {
@@ -13,22 +15,7 @@ namespace EtherData.Data
             _client = client;
         }
 
-        public IEnumerable<MinerStat> Get30()
-        {
-            return Get(30);
-        }
-
-        public IEnumerable<MinerStat> Get365()
-        {
-            return Get(365);
-        }
-
-        public IEnumerable<MinerStat> GetAll()
-        {
-            return Get(0);
-        }
-
-        private IEnumerable<MinerStat> Get(int period)
+        public IEnumerable<MinerStat> Get(MinerStatFilter filter)
         {
             string query = @"SELECT miner, COUNT(*) as count
                 FROM `bigquery-public-data.ethereum_blockchain.blocks`
@@ -37,28 +24,18 @@ namespace EtherData.Data
                 ORDER BY 2 DESC
                 LIMIT 1000";
             string where = "";
-            if (period != 0)
+            if (filter != MinerStatFilter.Default)
             {
-                where = $"WHERE DATE(timestamp) > DATE_ADD(current_date(), INTERVAL -{period} DAY)";
+                where = $"WHERE DATE(timestamp) > DATE_ADD(current_date(), INTERVAL -{(int)filter} DAY)";
             }
             query = string.Format(query, where);
 
-            var result = _client.ExecuteQuery(query, parameters: null);
-            return ToModel(result);
-        }
-
-        private IEnumerable<MinerStat> ToModel(BigQueryResults result)
-        {
-            var list = new List<MinerStat>();
-            foreach (var row in result)
-            {
-                list.Add(new MinerStat
+            return _client.ExecuteQuery(query, parameters: null)
+                .Select(x => new MinerStat
                 {
-                    Address = (string)row["miner"],
-                    Blocks = (long)row["count"],
+                    Address = (string)x["miner"],
+                    Blocks = (long)x["count"],
                 });
-            }
-            return list;
         }
     }
 

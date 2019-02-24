@@ -1,7 +1,9 @@
-using System.Net;
-using System.Net.Http;
 using EtherData.Cache;
 using EtherData.Data;
+using EtherData.Models;
+using EtherData.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
@@ -12,8 +14,8 @@ namespace EtherData.Functions.Tokens
     public static class GetUsage
     {
         [FunctionName("GetTokenUsage")]
-        public static HttpResponseMessage Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/tokens/usage")]HttpRequestMessage req,
+        public static IActionResult Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/tokens/usage")]HttpRequest req,
             ILogger log,
             ExecutionContext context)
         {
@@ -26,8 +28,9 @@ namespace EtherData.Functions.Tokens
             var query = new TokenUsageQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
 
-            var result = cache.Get(CacheKey.TOKEN_USAGE, query.GetAll);
-            return req.CreateResponse(HttpStatusCode.OK, result);
+            var filter = Enum<TokenStatFilter>.Parse(req.Query["filter"]);
+            var result = cache.Get(filter.ToKey(CacheKey.TOKEN_USAGE), () => query.Get(filter));
+            return new OkObjectResult(result);
         }
     }
 }

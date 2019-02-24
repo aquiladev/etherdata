@@ -23,13 +23,12 @@ namespace EtherData.Data
                 ORDER BY d
                 LIMIT 10";
 
-            var result = _client.ExecuteQuery(query, parameters: null)
+            return _client.ExecuteQuery(query, parameters: null)
                 .Select(x => new BlockNonceStat
                 {
                     Date = (DateTime)x["d"],
                     Nonces = ((IList<string>)x["n"]).Select(n => Convert.ToUInt64(n, 16))
                 });
-            return result;
         }
     }
 
