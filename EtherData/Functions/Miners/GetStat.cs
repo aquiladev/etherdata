@@ -8,6 +8,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace EtherData.Functions.Miners
 {
@@ -25,11 +26,9 @@ namespace EtherData.Functions.Miners
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new MinerStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
-
             var filter = Enum<MinerStatFilter>.Parse(req.Query["filter"]);
-            var result = cache.Get(filter.ToKey(CacheKey.MINER_STAT), () => query.Get(filter));
+            var result = cache.Get<IEnumerable<MinerStat>>(filter.ToKey(CacheKey.MINER_STAT));
             return new OkObjectResult(result);
         }
     }

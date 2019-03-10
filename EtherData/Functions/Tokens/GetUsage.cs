@@ -8,6 +8,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace EtherData.Functions.Tokens
 {
@@ -25,11 +26,9 @@ namespace EtherData.Functions.Tokens
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new TokenUsageQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
-
             var filter = Enum<TokenStatFilter>.Parse(req.Query["filter"]);
-            var result = cache.Get(filter.ToKey(CacheKey.TOKEN_USAGE), () => query.Get(filter));
+            var result = cache.Get<IEnumerable<TokenUsage>>(filter.ToKey(CacheKey.TOKEN_USAGE));
             return new OkObjectResult(result);
         }
     }

@@ -14,7 +14,7 @@ namespace EtherData.Functions.Cache
     {
         [FunctionName("Renew")]
         public static void Run(
-            [TimerTrigger("0 0 0 * * *")]TimerInfo timer,
+            [TimerTrigger("0 */5 * * * *")]TimerInfo timer,
             ILogger log,
             ExecutionContext context)
         {
@@ -68,7 +68,49 @@ namespace EtherData.Functions.Cache
                         var q = new ContractObsolescenceQuery(client);
                         return q.Get();
                     }
-                }
+                },
+                {
+                    MinerStatFilter.Default.ToKey(CacheKey.MINER_STAT),
+                    () => {
+                        var q = new MinerStatQuery(client);
+                        return q.Get(MinerStatFilter.Default);
+                    }
+                },
+                {
+                    MinerStatFilter.Month.ToKey(CacheKey.MINER_STAT),
+                    () => {
+                        var q = new MinerStatQuery(client);
+                        return q.Get(MinerStatFilter.Month);
+                    }
+                },
+                {
+                    MinerStatFilter.Year.ToKey(CacheKey.MINER_STAT),
+                    () => {
+                        var q = new MinerStatQuery(client);
+                        return q.Get(MinerStatFilter.Year);
+                    }
+                },
+                {
+                    TokenStatFilter.Default.ToKey(CacheKey.TOKEN_USAGE),
+                    () => {
+                        var q = new TokenUsageQuery(client);
+                        return q.Get(TokenStatFilter.Default);
+                    }
+                },
+                {
+                    TokenStatFilter.Month.ToKey(CacheKey.TOKEN_USAGE),
+                    () => {
+                        var q = new TokenUsageQuery(client);
+                        return q.Get(TokenStatFilter.Month);
+                    }
+                },
+                {
+                    TokenStatFilter.Year.ToKey(CacheKey.TOKEN_USAGE),
+                    () => {
+                        var q = new TokenUsageQuery(client);
+                        return q.Get(TokenStatFilter.Year);
+                    }
+                },
             };
         }
     }
