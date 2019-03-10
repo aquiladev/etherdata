@@ -8,6 +8,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace EtherData.Functions.Blocks
 {
@@ -25,11 +26,9 @@ namespace EtherData.Functions.Blocks
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new BlockStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
-
             var filter = Enum<BlockStatFilter>.Parse(req.Query["filter"]);
-            var result = cache.Get(filter.ToKey(CacheKey.BLOCK_STAT), () => query.Get(filter));
+            var result = cache.Get<IEnumerable<BlockStat>>(filter.ToKey(CacheKey.BLOCK_STAT));
             return new OkObjectResult(result);
         }
     }

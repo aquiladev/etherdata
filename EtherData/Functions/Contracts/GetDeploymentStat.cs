@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using EtherData.Cache;
@@ -23,10 +24,8 @@ namespace EtherData.Functions.Contracts
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new DeploymentStatQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
-
-            var result = cache.Get(CacheKey.CONTRACT_DEPLOYMENT_STAT, query.Get);
+            var result = cache.Get<IEnumerable<DeploymentStat>>(CacheKey.CONTRACT_DEPLOYMENT_STAT);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }

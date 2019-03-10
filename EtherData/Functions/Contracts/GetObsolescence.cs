@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using EtherData.Cache;
-using EtherData.Data;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
@@ -23,10 +23,8 @@ namespace EtherData.Functions.Contracts
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new ContractObsolescenceQuery(BigQueryFactory.Create(config));
             var cache = new RedisCacheManager(config);
-
-            var result = cache.Get(CacheKey.CONTRACT_OBSOLESCENCE, query.Get);
+            var result = cache.Get<IEnumerable<int>>(CacheKey.CONTRACT_OBSOLESCENCE);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
     }

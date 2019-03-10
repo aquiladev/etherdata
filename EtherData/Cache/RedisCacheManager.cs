@@ -32,7 +32,13 @@ namespace EtherData.Cache
             return JsonConvert.DeserializeObject<T>(jsonString);
         }
 
-        public T Get<T>(string key, Func<T> getData)
+
+        public T Get<T>(string key)
+        {
+            return Get<T>(key, null);
+        }
+
+        public T Get<T>(string key, Func<T> get)
         {
             var rValue = _db.StringGet(key);
             if (rValue.HasValue)
@@ -40,12 +46,21 @@ namespace EtherData.Cache
                 return Deserialize<T>(rValue);
             }
 
-            var result = getData();
-            var entryBytes = Serialize(result);
+            if (get != null)
+            {
+                var result = get();
+                Set(key, result);
+                return result;
+            }
+
+            return default(T);
+        }
+
+        public void Set<T>(string key, T value)
+        {
+            var entryBytes = Serialize(value);
             var expiresIn = TimeSpan.FromMinutes(_liveTime);
             _db.StringSet(key, entryBytes, expiresIn);
-
-            return result;
         }
 
         public void CleanUp()
