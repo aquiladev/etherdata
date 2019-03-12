@@ -14,7 +14,7 @@ namespace EtherData.Functions.Cache
     {
         [FunctionName("Renew")]
         public static void Run(
-            [TimerTrigger("0 */5 * * * *")]TimerInfo timer,
+            [TimerTrigger("0 0 0 * * *")]TimerInfo timer,
             ILogger log,
             ExecutionContext context)
         {
