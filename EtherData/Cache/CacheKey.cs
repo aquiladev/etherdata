@@ -12,6 +12,8 @@ namespace EtherData.Cache
         public const string MINER_STAT = "MINER_STAT_{0}";
         public const string CONTRACT_OBSOLESCENCE = "CONTRACT_OBSOLESCENCE";
         public const string CONTRACT_DEPLOYMENT_STAT = "CONTRACT_DEPLOYMENT_STAT";
+        public const string ERC721_STAT = "ERC721_STAT";
+        public const string ERC721_USAGE = "ERC721_USAGE";
 
         public static IEnumerable<string> GetAll()
         {
@@ -27,7 +29,9 @@ namespace EtherData.Cache
                 MinerStatFilter.Month.ToKey(MINER_STAT),
                 MinerStatFilter.Year.ToKey(MINER_STAT),
                 CONTRACT_OBSOLESCENCE,
-                CONTRACT_DEPLOYMENT_STAT
+                CONTRACT_DEPLOYMENT_STAT,
+                ERC721_STAT,
+                ERC721_USAGE
             };
         }
     }

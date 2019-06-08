@@ -62,13 +62,13 @@ namespace EtherData.Functions.Cache
                         return q.Get();
                     }
                 },
-                {
-                    CacheKey.CONTRACT_OBSOLESCENCE.ToString(),
-                    () => {
-                        var q = new ContractObsolescenceQuery(client);
-                        return q.Get();
-                    }
-                },
+                //{
+                //    CacheKey.CONTRACT_OBSOLESCENCE.ToString(),
+                //    () => {
+                //        var q = new ContractObsolescenceQuery(client);
+                //        return q.Get();
+                //    }
+                //},
                 {
                     MinerStatFilter.Default.ToKey(CacheKey.MINER_STAT),
                     () => {
@@ -109,6 +109,20 @@ namespace EtherData.Functions.Cache
                     () => {
                         var q = new TokenUsageQuery(client);
                         return q.Get(TokenStatFilter.Year);
+                    }
+                },
+                {
+                    CacheKey.ERC721_STAT,
+                    () => {
+                        var q = new Erc721StatQuery(client);
+                        return q.Get();
+                    }
+                },
+                {
+                    CacheKey.ERC721_USAGE,
+                    () => {
+                        var q = new Erc721UsageQuery(client);
+                        return q.Get();
                     }
                 },
             };
