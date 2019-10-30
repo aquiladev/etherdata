@@ -1,0 +1,16 @@
+{
+  "version": "2.0",
+  "functions": [
+    "Blocks_GetBlockStat",
+    "Cache_CleanUp",
+    "Cache_Renew",
+    "Contracts_GetDeploymentStat",
+    "Contracts_GetObsolescence",
+    "Miners_GetMinerStat",
+    "Nonces_GetBlockNonceStat",
+    "Tokens_GetErc721Stat",
+    "Tokens_GetErc721Usage",
+    "Tokens_GetTokenUsage"
+  ],
+  "functionTimeout": "00:10:00"
+}
