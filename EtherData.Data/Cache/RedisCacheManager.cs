@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
 using System.Text;
@@ -11,10 +10,10 @@ namespace EtherData.Data.Cache
         private readonly IDatabase _db;
         private readonly int _liveTime;
 
-        public RedisCacheManager(IConfigurationRoot config)
+        public RedisCacheManager(string connectionString, int liveTiem)
         {
-            _db = ConnectionMultiplexer.Connect(config["REDIS:CONNECTION_STRING"]).GetDatabase();
-            _liveTime = int.Parse(config["REDIS:LIVE_TIME"]);
+            _db = ConnectionMultiplexer.Connect(connectionString).GetDatabase();
+            _liveTime = liveTiem;
         }
 
         protected virtual byte[] Serialize(object item)

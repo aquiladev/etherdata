@@ -26,7 +26,7 @@ namespace EtherData.Functions.Cache
 
             log.LogInformation($"Renew function executed at: {DateTime.Now}");
 
-            var cache = new RedisCacheManager(config);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
             var mapping = GetMapping(config);
 
             foreach (var k in mapping.Keys)
@@ -38,7 +38,7 @@ namespace EtherData.Functions.Cache
 
         private static Dictionary<string, Func<object>> GetMapping(IConfigurationRoot config)
         {
-            var client = BigQueryFactory.Create(config);
+            var client = BigQueryFactory.Create(config["GOOGLE_APPLICATION:CREDENTIALS"], config["GOOGLE_APPLICATION:PROJECT_ID"]);
 
             return new Dictionary<string, Func<object>> {
                 {

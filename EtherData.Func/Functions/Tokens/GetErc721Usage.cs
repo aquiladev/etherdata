@@ -24,7 +24,7 @@ namespace EtherData.Functions.Tokens
                 .AddEnvironmentVariables()
                 .Build();
 
-            var cache = new RedisCacheManager(config);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
             var result = cache.Get<IEnumerable<Erc721Usage>>(CacheKey.ERC721_USAGE);
             return new OkObjectResult(result);
         }

@@ -23,8 +23,9 @@ namespace EtherData.Functions.Nonces
                 .AddEnvironmentVariables()
                 .Build();
 
-            var query = new BlockNonceStatQuery(BigQueryFactory.Create(config));
-            var cache = new RedisCacheManager(config);
+            var queryClient = BigQueryFactory.Create(config["GOOGLE_APPLICATION:CREDENTIALS"], config["GOOGLE_APPLICATION:PROJECT_ID"]);
+            var query = new BlockNonceStatQuery(queryClient);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
 
             var result = cache.Get(CacheKey.BLOCK_NONCE_STAT, query.Get);
             return req.CreateResponse(HttpStatusCode.OK, result);

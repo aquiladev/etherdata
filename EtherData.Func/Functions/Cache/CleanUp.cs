@@ -22,7 +22,7 @@ namespace EtherData.Functions.Cache
                 .AddEnvironmentVariables()
                 .Build();
 
-            var cache = new RedisCacheManager(config);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
             cache.CleanUp();
 
             return req.CreateResponse(HttpStatusCode.OK);

@@ -26,7 +26,7 @@ namespace EtherData.Functions.Miners
                 .AddEnvironmentVariables()
                 .Build();
 
-            var cache = new RedisCacheManager(config);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
             var filter = Enum<MinerStatFilter>.Parse(req.Query["filter"]);
             var result = cache.Get<IEnumerable<MinerStat>>(filter.ToKey(CacheKey.MINER_STAT));
             return new OkObjectResult(result);

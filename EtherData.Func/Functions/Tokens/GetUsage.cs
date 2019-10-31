@@ -26,7 +26,7 @@ namespace EtherData.Functions.Tokens
                 .AddEnvironmentVariables()
                 .Build();
 
-            var cache = new RedisCacheManager(config);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
             var filter = Enum<TokenStatFilter>.Parse(req.Query["filter"]);
             var result = cache.Get<IEnumerable<TokenUsage>>(filter.ToKey(CacheKey.TOKEN_USAGE));
             return new OkObjectResult(result);

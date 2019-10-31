@@ -24,7 +24,7 @@ namespace EtherData.Functions.Contracts
                 .AddEnvironmentVariables()
                 .Build();
 
-            var cache = new RedisCacheManager(config);
+            var cache = new RedisCacheManager(config["REDIS:CONNECTION_STRING"], int.Parse(config["REDIS:LIVE_TIME"]));
             var result = cache.Get<IEnumerable<DeploymentStat>>(CacheKey.CONTRACT_DEPLOYMENT_STAT);
             return req.CreateResponse(HttpStatusCode.OK, result);
         }
