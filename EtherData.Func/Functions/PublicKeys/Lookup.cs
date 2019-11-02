@@ -68,7 +68,7 @@ namespace EtherData.Func.Functions.PublicKeys
             }
 
             return string.IsNullOrEmpty(model.Address) && model.Ens == null ?
-                new BadRequestObjectResult("Wrong format") :
+                new NotFoundObjectResult("Public key not found") :
                 (IActionResult)new OkObjectResult(model);
         }
 
