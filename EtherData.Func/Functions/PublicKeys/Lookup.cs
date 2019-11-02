@@ -21,7 +21,7 @@ namespace EtherData.Func.Functions.PublicKeys
     {
         [FunctionName("PublicKeys_Lookup")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/publickey/lookup")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v0.1/publickeys/lookup")] HttpRequest req,
             [Table("%PublicKey:Storage:PublicKeyTable%", Connection = "PublicKey:Storage:Connection")] CloudTable table,
             ILogger log,
             ExecutionContext context)
