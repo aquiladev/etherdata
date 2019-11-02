@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythXL.Jobs", "MythXL.Jobs\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythXL.Transform", "MythXL.Transform\MythXL.Transform.csproj", "{530DA41E-7B91-4E2D-A119-9053B9E7E0E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtherData.Func", "EtherData.Func\EtherData.Func.csproj", "{44273B3E-59F3-42EC-BC22-B97C676DBF64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtherData.Func", "EtherData.Func\EtherData.Func.csproj", "{44273B3E-59F3-42EC-BC22-B97C676DBF64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

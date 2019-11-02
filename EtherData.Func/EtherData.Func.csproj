@@ -6,7 +6,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.5" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
-    <PackageReference Include="Nethereum.Web3" Version="3.1.2" />
+    <PackageReference Include="Nethereum.ENS" Version="3.4.0" />
+    <PackageReference Include="Nethereum.Web3" Version="3.4.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EtherData.Data\EtherData.Data.csproj" />
