@@ -51,6 +51,7 @@ namespace EtherData.Func.MythX
                 }
             }
 
+            System.Threading.Thread.Sleep(300000);
             throw new Exception("Limit exceeded for all accounts");
         }
     }
