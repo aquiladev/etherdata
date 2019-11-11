@@ -62,13 +62,13 @@ namespace EtherData.Functions.Cache
                         return q.Get();
                     }
                 },
-                //{
-                //    CacheKey.CONTRACT_OBSOLESCENCE.ToString(),
-                //    () => {
-                //        var q = new ContractObsolescenceQuery(client);
-                //        return q.Get();
-                //    }
-                //},
+                {
+                    CacheKey.CONTRACT_OBSOLESCENCE.ToString(),
+                    () => {
+                        var q = new ContractObsolescenceQuery(client);
+                        return q.Get();
+                    }
+                },
                 {
                     MinerStatFilter.Default.ToKey(CacheKey.MINER_STAT),
                     () => {
